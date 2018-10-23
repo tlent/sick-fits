@@ -1,7 +1,20 @@
+enum Permission {
+  ADMIN
+  USER
+  ITEM_CREATE
+  ITEM_UPDATE
+  ITEM_DELETE
+  PERMISSION_UPDATEo
+}
+
 type User {
   id: ID! @unique
   name: String!
-  email: String!
+  email: String! @unique
+  password: String!
+  resetToken: String
+  resetTokenExpiry: String
+  permissions: [Permission]
 }
 
 type Item {
