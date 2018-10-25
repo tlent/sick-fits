@@ -27,7 +27,6 @@ const Mutation = {
       info
     );
     const token = JWT.sign({ userId: user.id }, process.env.APP_SECRET);
-    console.log(ctx);
     ctx.response.cookie("token", token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 365
