@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
+import { CURRENT_USER_QUERY } from "./User";
 import Form from "./styles/Form";
 import ErrorMessage from "./ErrorMessage";
 
@@ -30,58 +31,60 @@ class Signup extends Component {
   };
   render() {
     return (
-      <Mutation mutation={SIGNUP_MUTATION} variables={this.state}>
-        {(signup, { loading, error }) => {
-          return (
-            <Form
-              // method="POST"
-              onSubmit={async e => {
-                e.preventDefault();
-                const response = await signup();
-                this.setState({ email: "", name: "", password: "" });
-              }}
-            >
-              <fieldset disabled={loading} aria-busy={loading}>
-                <h2>Sign up for an account</h2>
-                <ErrorMessage error={error} />
-                <label htmlFor="email">
-                  Email
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    placeholder="email"
-                    value={this.state.email}
-                    onChange={this.saveToState}
-                  />
-                </label>
-                <label htmlFor="name">
-                  Name
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    placeholder="name"
-                    value={this.state.name}
-                    onChange={this.saveToState}
-                  />
-                </label>
-                <label htmlFor="password">
-                  Password
-                  <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    placeholder="password"
-                    value={this.state.password}
-                    onChange={this.saveToState}
-                  />
-                </label>
-                <button type="submit">Sign up</button>
-              </fieldset>
-            </Form>
-          );
-        }}
+      <Mutation
+        mutation={SIGNUP_MUTATION}
+        variables={this.state}
+        refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+      >
+        {(signup, { loading, error }) => (
+          <Form
+            method="post"
+            onSubmit={async e => {
+              e.preventDefault();
+              await signup();
+              this.setState({ email: "", name: "", password: "" });
+            }}
+          >
+            <fieldset disabled={loading} aria-busy={loading}>
+              <h2>Sign up for an account</h2>
+              <ErrorMessage error={error} />
+              <label htmlFor="email">
+                Email
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="email"
+                  value={this.state.email}
+                  onChange={this.saveToState}
+                />
+              </label>
+              <label htmlFor="name">
+                Name
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  placeholder="name"
+                  value={this.state.name}
+                  onChange={this.saveToState}
+                />
+              </label>
+              <label htmlFor="password">
+                Password
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="password"
+                  value={this.state.password}
+                  onChange={this.saveToState}
+                />
+              </label>
+              <button type="submit">Sign up</button>
+            </fieldset>
+          </Form>
+        )}
       </Mutation>
     );
   }

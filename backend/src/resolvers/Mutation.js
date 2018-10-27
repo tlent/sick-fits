@@ -1,6 +1,19 @@
 const bcrypt = require("bcryptjs");
 const JWT = require("jsonwebtoken");
 
+const TOKEN_COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 365; // 365 Days
+
+function addTokenCookieToResponse(response, token) {
+  response.cookie("token", token, {
+    httpOnly: true,
+    maxAge: TOKEN_COOKIE_MAX_AGE
+  });
+}
+
+function signJWT(payload) {
+  return JWT.sign(payload, process.env.APP_SECRET);
+}
+
 const Mutation = {
   async createItem(parent, args, ctx, info) {
     const item = await ctx.db.mutation.createItem({ data: { ...args } }, info);
@@ -26,11 +39,17 @@ const Mutation = {
       { data: { ...args, password, permissions: { set: ["USER"] } } },
       info
     );
-    const token = JWT.sign({ userId: user.id }, process.env.APP_SECRET);
-    ctx.response.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 365
-    });
+    const token = signJWT({ userID: user.id });
+    addTokenCookieToResponse(ctx.response, token);
+    return user;
+  },
+  async signin(parent, { email, password }, ctx, info) {
+    const user = await ctx.db.query.user({ where: { email } });
+    if (!user) throw new Error(`No such user found with email ${email}`);
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) throw new Error("Incorrect password");
+    const token = signJWT({ userID: user.id });
+    addTokenCookieToResponse(ctx.response, token);
     return user;
   }
 };
