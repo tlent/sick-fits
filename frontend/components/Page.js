@@ -49,7 +49,7 @@ injectGlobal`
     font-family: 'radnika_next';
   }
 
-  a {
+  a, button {
     text-decoration: none;
     color: ${theme.black};
   }
