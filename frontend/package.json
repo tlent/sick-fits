@@ -13,11 +13,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-boost": "^0.1.18",
-    "apollo-client": "^2.4.4",
+    "apollo-boost": "^0.1.19",
+    "apollo-client": "^2.4.5",
     "babel-core": "^7.0.0-bridge.0",
     "babel-plugin-styled-components": "^1.8.0",
-    "date-fns": "^2.0.0-alpha.24",
+    "date-fns": "^2.0.0-alpha.25",
     "downshift": "^2.2.3",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
@@ -42,7 +42,7 @@
     "babel-plugin-module-resolver": "^3.1.1",
     "casual": "^1.5.19",
     "enzyme-to-json": "^3.3.4",
-    "graphql-tools": "^4.0.2",
+    "graphql-tools": "^4.0.3",
     "jest": "^23.6.0",
     "jest-transform-graphql": "^2.1.0"
   },
