@@ -76,7 +76,7 @@ const Mutation = {
     const [user] = await ctx.db.query.users({
       where: {
         resetToken: args.resetToken,
-        resetTokenExpiry_gte: Date.now() - 3600000
+        resetTokenExpiry_gte: Date.now()
       }
     });
     if (!user) throw new Error("Invalid or expired reset token");
