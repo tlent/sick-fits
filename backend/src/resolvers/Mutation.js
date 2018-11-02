@@ -67,7 +67,6 @@ const Mutation = {
       where: { email },
       data: { resetToken, resetTokenExpiry }
     });
-    console.log(response);
     return { message: "Ok" };
   },
   async resetPassword(parent, args, ctx, info) {
