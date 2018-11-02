@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
 const JWT = require("jsonwebtoken");
+const { randomBytes } = require("crypto");
+const { promisify } = require("util");
 
 const TOKEN_COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 365; // 365 Days
 
@@ -55,6 +57,40 @@ const Mutation = {
   async signout(parent, args, ctx, info) {
     ctx.response.clearCookie("token");
     return { message: "Goodbye!" };
+  },
+  async requestReset(parent, { email }, ctx, info) {
+    const user = await ctx.db.query.user({ where: { email } });
+    if (!user) throw new Error(`No such user found with email ${email}`);
+    const resetToken = (await promisify(randomBytes)(20)).toString("hex");
+    const resetTokenExpiry = Date.now() + 3600000; // 1 hour from now
+    const response = await ctx.db.mutation.updateUser({
+      where: { email },
+      data: { resetToken, resetTokenExpiry }
+    });
+    console.log(response);
+    return { message: "Ok" };
+  },
+  async resetPassword(parent, args, ctx, info) {
+    if (args.password !== args.confirmPassword)
+      throw new Error("Passwords do not match");
+    const [user] = await ctx.db.query.users({
+      where: {
+        resetToken: args.resetToken,
+        resetTokenExpiry_gte: Date.now() - 3600000
+      }
+    });
+    if (!user) throw new Error("Invalid or expired reset token");
+    const password = await bcrypt.hash(args.password, 10);
+    const updatedUser = await ctx.db.mutation.updateUser(
+      {
+        where: { id: user.id },
+        data: { password, resetToken: null, resetTokenExpiry: null }
+      },
+      info
+    );
+    const jwt = signJWT({ userID: updatedUser.id });
+    addTokenCookieToResponse(ctx.response, jwt);
+    return updatedUser;
   }
 };
 
