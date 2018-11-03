@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const JWT = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
+const { transport, makeEmail } = require("../mail");
 
 const TOKEN_COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 365; // 365 Days
 
@@ -66,6 +67,16 @@ const Mutation = {
     const response = await ctx.db.mutation.updateUser({
       where: { email },
       data: { resetToken, resetTokenExpiry }
+    });
+    const mailResponse = transport.sendMail({
+      from: "tcl293@gmail.com",
+      to: user.email,
+      subject: "Sickfits Password Reset",
+      html: makeEmail(
+        `Resetting password\n\n<a href="${
+          process.env.FRONTEND_URL
+        }/reset?resetToken=${resetToken}">Click here!</a>`
+      )
     });
     return { message: "Ok" };
   },
