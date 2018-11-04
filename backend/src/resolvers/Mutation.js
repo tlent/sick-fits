@@ -3,6 +3,7 @@ const JWT = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
 const { transport, makeEmail } = require("../mail");
+const { hasPermission } = require("../utils");
 
 const TOKEN_COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 365; // 365 Days
 
@@ -116,6 +117,19 @@ const Mutation = {
     const jwt = signJWT({ userID: updatedUser.id });
     addTokenCookieToResponse(ctx.response, jwt);
     return updatedUser;
+  },
+  async setPermissions(parent, args, ctx, info) {
+    if (!ctx.request.user) throw new Error("Must be logged in");
+    hasPermission(ctx.request.user, ["ADMIN", "PERMISSIONUPDATE"]);
+    const user = await ctx.db.query.user({ where: { id: args.userID } });
+    if (!user) throw new Error("User not found");
+    return ctx.db.mutation.updateUser(
+      {
+        where: { id: user.id },
+        data: { permissions: { set: args.permissions } }
+      },
+      info
+    );
   }
 };
 

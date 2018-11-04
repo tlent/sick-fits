@@ -23,6 +23,7 @@ type Mutation {
     password: String!
     confirmPassword: String!
   ): User!
+  setPermissions(userID: ID!, permissions: [Permission!]!): User!
 }
 
 type Query {
