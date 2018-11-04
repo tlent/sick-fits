@@ -19,7 +19,22 @@ function signJWT(payload) {
 
 const Mutation = {
   async createItem(parent, args, ctx, info) {
-    const item = await ctx.db.mutation.createItem({ data: { ...args } }, info);
+    if (!ctx.request.userID)
+      throw new Error("You must be logged in to do that.");
+
+    const item = await ctx.db.mutation.createItem(
+      {
+        data: {
+          ...args,
+          user: {
+            connect: {
+              id: ctx.request.userID
+            }
+          }
+        }
+      },
+      info
+    );
     return item;
   },
   async updateItem(parent, args, ctx, info) {
