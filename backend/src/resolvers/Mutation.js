@@ -139,6 +139,36 @@ const Mutation = {
       },
       info
     );
+  },
+  async addToCart(parent, args, ctx, info) {
+    const { user } = ctx.request;
+    if (!user) throw new Error("Must be logged in");
+    const [existingCartItem] = await ctx.db.query.cartItems({
+      where: { user: { id: user.id }, item: { id: args.itemID } }
+    });
+    if (existingCartItem) {
+      return ctx.db.mutation.updateCartItem(
+        {
+          where: { id: existingCartItem.id },
+          data: { quantity: existingCartItem.quantity + 1 }
+        },
+        info
+      );
+    }
+    return ctx.db.mutation.createCartItem(
+      {
+        data: {
+          quantity: 1,
+          item: { connect: { id: args.itemID } },
+          user: {
+            connect: {
+              id: user.id
+            }
+          }
+        }
+      },
+      info
+    );
   }
 };
 

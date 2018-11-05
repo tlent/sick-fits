@@ -24,6 +24,7 @@ type Mutation {
     confirmPassword: String!
   ): User!
   setPermissions(userID: ID!, permissions: [Permission!]!): User!
+  addToCart(itemID: ID!): CartItem!
 }
 
 type Query {
@@ -44,4 +45,5 @@ type User {
   name: String!
   email: String!
   permissions: [Permission!]!
+  cart: [CartItem!]!
 }
