@@ -25,6 +25,7 @@ type Mutation {
   ): User!
   setPermissions(userID: ID!, permissions: [Permission!]!): User!
   addToCart(itemID: ID!): CartItem!
+  removeFromCart(id: ID!): CartItem!
 }
 
 type Query {

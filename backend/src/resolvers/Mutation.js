@@ -169,6 +169,17 @@ const Mutation = {
       },
       info
     );
+  },
+  async removeFromCart(parent, args, ctx, info) {
+    const { user } = ctx.request;
+    if (!user) throw new Error("Must be logged in");
+    const cartItem = await ctx.db.query.cartItem(
+      { where: { id: args.id } },
+      "{ id, user { id } }"
+    );
+    if (!cartItem) throw new Error("No cart item found");
+    if (cartItem.user.id !== user.id) throw new Error("Not part of your cart");
+    return ctx.db.mutation.deleteCartItem({ where: { id: args.id } }, info);
   }
 };
 
