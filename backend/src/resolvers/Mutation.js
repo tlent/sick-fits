@@ -58,7 +58,7 @@ const Mutation = {
     );
     if (!ownsItem && !hasPermissions)
       throw new Error("You don't have permission");
-    return ctx.db.mutation.deleteItem({ where }, info);
+    return ctx.db.mutation.deleteItem({ where: { id: args.id } }, info);
   },
   async signup(parent, args, ctx, info) {
     args.email = args.email.toLowerCase();
