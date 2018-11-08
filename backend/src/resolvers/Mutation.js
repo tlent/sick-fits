@@ -4,6 +4,7 @@ const { randomBytes } = require("crypto");
 const { promisify } = require("util");
 const { transport, makeEmail } = require("../mail");
 const { hasPermission } = require("../utils");
+const stripe = require("../stripe");
 
 const TOKEN_COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 365; // 365 Days
 
@@ -180,6 +181,39 @@ const Mutation = {
     if (!cartItem) throw new Error("No cart item found");
     if (cartItem.user.id !== user.id) throw new Error("Not part of your cart");
     return ctx.db.mutation.deleteCartItem({ where: { id: args.id } }, info);
+  },
+  async createOrder(parent, args, ctx, info) {
+    const { user } = ctx.request;
+    if (!user) throw new Error("Must be logged in");
+    const userWithCartAndItems = await ctx.db.query.user(
+      { where: { id: user.id } },
+      `{
+        id
+        name
+        email
+        cart {
+          id
+          quantity
+          item {
+            id
+            title
+            price
+            description
+            image
+            largeImage
+          }
+        }
+      }`
+    );
+    const amount = userWithCartAndItems.cart.reduce(
+      (total, cartItem) => total + cartItem.item.price * cartItem.quantity,
+      0
+    );
+    const charge = await stripe.charges.create({
+      amount,
+      currency: "USD",
+      source: args.token
+    });
   }
 };
 
