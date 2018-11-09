@@ -31,6 +31,17 @@ const Query = {
       throw new Error("You don't have permission");
     }
     return order;
+  },
+  orders(parent, args, context, info) {
+    const { user } = context.request;
+    if (!user) throw new Error("Must be logged in");
+    return context.db.query.orders(
+      {
+        ...args,
+        where: { user: { id: user.id } }
+      },
+      info
+    );
   }
 };
 
