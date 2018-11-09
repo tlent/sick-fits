@@ -29,13 +29,16 @@ function totalItems(cart) {
 
 class TakeMyMoney extends Component {
   onToken = async (response, createOrder) => {
-    console.log(response);
+    NProgress.start();
     const order = await createOrder({
       variables: {
         token: response.id
       }
     }).catch(error => alert(error.message));
-    console.log(order);
+    Router.push({
+      pathname: "/order",
+      query: { id: order.data.createOrder.id }
+    });
   };
   render() {
     return (

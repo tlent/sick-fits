@@ -16,6 +16,21 @@ const Query = {
     }
     hasPermission(context.request.user, ["ADMIN", "PERMISSIONUPDATE"]);
     return context.db.query.users({}, info);
+  },
+  async order(parent, args, context, info) {
+    const { user } = context.request;
+    if (!user) throw new Error("Must be logged in");
+    const order = await context.db.query.order(
+      { where: { id: args.orderID } },
+      info
+    );
+    if (!order) return;
+    const userOwnsOrder = order.user.id === user.id;
+    const userIsAdmin = user.permissions.includes("ADMIN");
+    if (!userIsAdmin && !userOwnsOrder) {
+      throw new Error("You don't have permission");
+    }
+    return order;
   }
 };
 
