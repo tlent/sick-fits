@@ -3,7 +3,6 @@ import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import Router from "next/router";
 import Form from "./styles/Form";
-import formatMoney from "../lib/formatMoney";
 import ErrorMessage from "./ErrorMessage";
 
 const CREATE_ITEM_MUTATION = gql`
@@ -34,9 +33,7 @@ class CreateItem extends Component {
     this.setState({ [name]: parsedValue });
   };
   uploadFile = async e => {
-    console.log("uploading file");
     const files = e.target.files;
-    console.log(files);
     const data = new FormData();
     data.append("file", files[0]);
     data.append("upload_preset", "sickfits");
@@ -48,7 +45,6 @@ class CreateItem extends Component {
       }
     );
     const file = await response.json();
-    console.log(file);
     this.setState({
       image: file.secure_url,
       largeImage: file.eager[0].secure_url
@@ -59,6 +55,7 @@ class CreateItem extends Component {
       <Mutation mutation={CREATE_ITEM_MUTATION} variables={this.state}>
         {(createItem, { loading, error }) => (
           <Form
+            data-test="CreateItemForm"
             onSubmit={async e => {
               e.preventDefault();
               const response = await createItem();
