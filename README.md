@@ -2,7 +2,7 @@
 
 This is my work for the [Advanced React and GraphQL course](https://advancedreact.com/) by Wes Bos.
 
-My final version of the project can be seen [here](https://sickfits-frontend.now.sh).
+My final version of the project can be seen [here](https://sickfits-frontend.now.sh). It may take a while to load the first time because now.sh sleeps free-tier deployments that haven't received a request recently.
 
 # Sick Fits
 
