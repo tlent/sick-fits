@@ -35,8 +35,6 @@ describe("AddToCart component", () => {
         <AddToCart id={"abc123"} />
       </MockedProvider>
     );
-    await wait();
-    wrapper.update();
     expect(wrapper.find("button")).toMatchSnapshot();
   });
 
