@@ -30,16 +30,26 @@ function routeToItem(item) {
 class Autocomplete extends Component {
   state = {
     loading: false,
-    items: []
+    items: [],
+    typing: false
   };
-  handleChange = debounce(async (e, client) => {
-    this.setState({ loading: true });
-    const response = await client.query({
-      query: SEARCH_ITEMS_QUERY,
-      variables: { searchTerm: e.target.value }
-    });
-    this.setState({ loading: false, items: response.data.items });
-  }, 350);
+  handleChange = (e, client) => {
+    this.setState({ typing: true });
+    const doRequest = debounce(async () => {
+      const searchTerm = e.target.value;
+      if (!searchTerm) {
+        this.setState({ loading: false, items: [] });
+        return;
+      }
+      this.setState({ loading: true, typing: false });
+      const response = await client.query({
+        query: SEARCH_ITEMS_QUERY,
+        variables: { searchTerm }
+      });
+      this.setState({ loading: false, items: response.data.items });
+    }, 350);
+    doRequest();
+  };
   render() {
     resetIdCounter();
     return (
@@ -84,9 +94,13 @@ class Autocomplete extends Component {
                       {item.title}
                     </DropDownItem>
                   ))}
-                  {!this.state.items.length && !this.state.loading && (
-                    <DropDownItem>Nothing found for {inputValue}</DropDownItem>
-                  )}
+                  {!this.state.typing &&
+                    !this.state.items.length &&
+                    !this.state.loading && (
+                      <DropDownItem>
+                        Nothing found for {inputValue}
+                      </DropDownItem>
+                    )}
                 </DropDown>
               )}
             </div>
