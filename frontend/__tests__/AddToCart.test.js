@@ -1,5 +1,6 @@
 import { mount } from "enzyme";
 import wait from "waait";
+import waitForExpect from "wait-for-expect";
 import { MockedProvider } from "react-apollo/test-utils";
 import { ApolloConsumer } from "react-apollo";
 import AddToCart, { ADD_TO_CART_MUTATION } from "../components/AddToCart";
@@ -25,6 +26,25 @@ const mocks = [
         }
       }
     }
+  }
+];
+
+const mocksWithDelayedAddToCart = [
+  {
+    request: { query: CURRENT_USER_QUERY },
+    result: { data: { me: { ...fakeUser(), cart: [] } } }
+  },
+  {
+    request: { query: ADD_TO_CART_MUTATION, variables: { itemID: "abc123" } },
+    result: {
+      data: {
+        addToCart: {
+          ...fakeCartItem(),
+          quantity: 1
+        }
+      }
+    },
+    delay: 100
   }
 ];
 
@@ -57,19 +77,20 @@ describe("AddToCart component", () => {
     })).data.me;
     expect(me.cart).toHaveLength(0);
     wrapper.find("button").simulate("click");
-    await wait();
-    wrapper.update();
-    me = (await apolloClient.query({
-      query: CURRENT_USER_QUERY
-    })).data.me;
-    expect(me.cart).toHaveLength(1);
+    await waitForExpect(async () => {
+      wrapper.update();
+      me = (await apolloClient.query({
+        query: CURRENT_USER_QUERY
+      })).data.me;
+      expect(me.cart).toHaveLength(1);
+    });
     expect(me.cart[0].id).toBe("omg123");
     expect(me.cart[0].quantity).toBe(3);
   });
 
   it("changes from add to adding when clicked", async () => {
     const wrapper = mount(
-      <MockedProvider mocks={mocks}>
+      <MockedProvider mocks={mocksWithDelayedAddToCart}>
         <AddToCart id={"abc123"} />
       </MockedProvider>
     );
@@ -78,8 +99,9 @@ describe("AddToCart component", () => {
     expect(wrapper.text()).toContain("Add to Cart");
 
     wrapper.find("button").simulate("click");
-    await wait();
-    wrapper.update();
-    expect(wrapper.text()).toContain("Adding to Cart");
+    await waitForExpect(() => {
+      wrapper.update();
+      expect(wrapper.text()).toContain("Adding to Cart");
+    });
   });
 });
