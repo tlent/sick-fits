@@ -2,7 +2,7 @@
 
 This is my work for the [Advanced React and GraphQL course](https://advancedreact.com/) by Wes Bos.
 
-My final version of the project can be seen (here)[https://sickfits-frontend.now.sh].
+My final version of the project can be seen [here](https://sickfits-frontend.now.sh).
 
 # Sick Fits
 
@@ -10,7 +10,7 @@ Sick Fits is a full stack online clothing store complete with real credit checko
 
 ## Tech stack
 
-!(The tech stack of sick fits)[images/tech-stack.png "The tech stack of sick fits"]
+![The tech stack of sick fits](images/tech-stack.png "The tech stack of sick fits")
 
 ## Concepts covered
 
