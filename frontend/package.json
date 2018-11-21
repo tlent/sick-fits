@@ -55,7 +55,10 @@
     "transform": {
       "\\.(gql|graphql)$": "jest-transform-graphql",
       ".*": "babel-jest"
-    }
+    },
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
   },
   "//": "This is our babel config, I prefer this over a .babelrc file",
   "babel": {

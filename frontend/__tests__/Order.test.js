@@ -1,5 +1,4 @@
 import { mount } from "enzyme";
-import toJSON from "enzyme-to-json";
 import wait from "waait";
 import Order, { SINGLE_ORDER_QUERY } from "../components/Order";
 import { MockedProvider } from "react-apollo/test-utils";
@@ -21,6 +20,6 @@ describe("Order component", () => {
     );
     await wait();
     wrapper.update();
-    expect(toJSON(wrapper.find("div[data-test='Order']"))).toMatchSnapshot();
+    expect(wrapper.find("div[data-test='Order']")).toMatchSnapshot();
   });
 });

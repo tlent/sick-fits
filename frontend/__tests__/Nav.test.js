@@ -1,7 +1,6 @@
 import { mount } from "enzyme";
 import wait from "waait";
 import Nav from "../components/Nav";
-import toJSON from "enzyme-to-json";
 import { CURRENT_USER_QUERY } from "../components/User";
 import { MockedProvider } from "react-apollo/test-utils";
 import { fakeUser, fakeCartItem } from "../lib/testUtils";
@@ -41,7 +40,7 @@ describe("Nav component", () => {
     await wait();
     wrapper.update();
     const nav = wrapper.find('[data-test="Nav"]');
-    expect(toJSON(nav)).toMatchSnapshot();
+    expect(nav).toMatchSnapshot();
   });
 
   it("renders full nav when signed in", async () => {
@@ -67,6 +66,6 @@ describe("Nav component", () => {
     wrapper.update();
     const nav = wrapper.find('ul[data-test="Nav"]');
     const count = nav.find("div.count");
-    expect(toJSON(count)).toMatchSnapshot();
+    expect(count).toMatchSnapshot();
   });
 });

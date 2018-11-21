@@ -1,5 +1,4 @@
 import { mount } from "enzyme";
-import toJSON from "enzyme-to-json";
 import wait from "waait";
 import RemoveFromCart, {
   REMOVE_FROM_CART_MUTATION
@@ -41,7 +40,7 @@ describe("RemoveFromCart component", () => {
         <RemoveFromCart id={"abc123"} />
       </MockedProvider>
     );
-    expect(toJSON(wrapper.find("button"))).toMatchSnapshot();
+    expect(wrapper.find("button")).toMatchSnapshot();
   });
 
   it("removes item from cart on click", async () => {

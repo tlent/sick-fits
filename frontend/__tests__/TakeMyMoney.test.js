@@ -1,5 +1,4 @@
 import { mount } from "enzyme";
-import toJSON from "enzyme-to-json";
 import wait from "waait";
 import TakeMyMoney from "../components/TakeMyMoney";
 import { CURRENT_USER_QUERY } from "../components/User";
@@ -29,7 +28,7 @@ describe("TakeMyMoney component", () => {
     await wait();
     wrapper.update();
     const checkoutButton = wrapper.find("ReactStripeCheckout");
-    expect(toJSON(checkoutButton)).toMatchSnapshot();
+    expect(checkoutButton).toMatchSnapshot();
   });
 
   it("creates an order ontoken", async () => {

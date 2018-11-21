@@ -1,5 +1,4 @@
 import { mount } from "enzyme";
-import toJSON from "enzyme-to-json";
 import wait from "waait";
 import SingleItem, { SINGLE_ITEM_QUERY } from "../components/SingleItem";
 import { MockedProvider } from "react-apollo/test-utils";
@@ -21,9 +20,9 @@ describe("SingleItem component", () => {
     expect(wrapper.text()).toContain("Loading");
     await wait();
     wrapper.update();
-    expect(toJSON(wrapper.find("h2"))).toMatchSnapshot();
-    expect(toJSON(wrapper.find("img"))).toMatchSnapshot();
-    expect(toJSON(wrapper.find("p"))).toMatchSnapshot();
+    expect(wrapper.find("h2")).toMatchSnapshot();
+    expect(wrapper.find("img")).toMatchSnapshot();
+    expect(wrapper.find("p")).toMatchSnapshot();
   });
 
   it("errors with a not found item", async () => {
@@ -42,6 +41,6 @@ describe("SingleItem component", () => {
     wrapper.update();
     const item = wrapper.find('[data-test="graphql-error"]');
     expect(item.text()).toContain("Items not found!");
-    expect(toJSON(item)).toMatchSnapshot();
+    expect(item).toMatchSnapshot();
   });
 });

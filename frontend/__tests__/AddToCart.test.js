@@ -1,6 +1,5 @@
 import { mount } from "enzyme";
 import wait from "waait";
-import toJSON from "enzyme-to-json";
 import { MockedProvider } from "react-apollo/test-utils";
 import { ApolloConsumer } from "react-apollo";
 import AddToCart, { ADD_TO_CART_MUTATION } from "../components/AddToCart";
@@ -38,7 +37,7 @@ describe("AddToCart component", () => {
     );
     await wait();
     wrapper.update();
-    expect(toJSON(wrapper.find("button"))).toMatchSnapshot();
+    expect(wrapper.find("button")).toMatchSnapshot();
   });
 
   it("adds an item to cart when clicked", async () => {

@@ -1,6 +1,5 @@
 import { mount } from "enzyme";
 import wait from "waait";
-import toJSON from "enzyme-to-json";
 import { MockedProvider } from "react-apollo/test-utils";
 import RequestReset, {
   REQUEST_RESET_MUTATION
@@ -27,7 +26,7 @@ describe("RequestReset component", () => {
       </MockedProvider>
     );
     expect(
-      toJSON(wrapper.find("form[data-test='RequestResetForm']"))
+      wrapper.find("form[data-test='RequestResetForm']")
     ).toMatchSnapshot();
   });
 

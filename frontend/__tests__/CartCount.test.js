@@ -1,5 +1,4 @@
 import { shallow } from "enzyme";
-import toJSON from "enzyme-to-json";
 import CartCount from "../components/CartCount";
 
 describe("<CartCount/>", () => {
@@ -9,13 +8,13 @@ describe("<CartCount/>", () => {
 
   it("matches the snapshot", () => {
     const wrapper = shallow(<CartCount count={11} />);
-    expect(toJSON(wrapper)).toMatchSnapshot();
+    expect(wrapper).toMatchSnapshot();
   });
 
   it("updates via props", () => {
     const wrapper = shallow(<CartCount count={50} />);
-    expect(toJSON(wrapper)).toMatchSnapshot();
+    expect(wrapper).toMatchSnapshot();
     wrapper.setProps({ count: 10 });
-    expect(toJSON(wrapper)).toMatchSnapshot();
+    expect(wrapper).toMatchSnapshot();
   });
 });

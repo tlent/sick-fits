@@ -1,6 +1,5 @@
 import { mount } from "enzyme";
 import wait from "waait";
-import toJSON from "enzyme-to-json";
 import { MockedProvider } from "react-apollo/test-utils";
 import Cart, { LOCAL_STATE_QUERY } from "../components/Cart";
 import { fakeUser, fakeCartItem } from "../lib/testUtils";
@@ -26,7 +25,7 @@ describe("Cart component", () => {
     );
     await wait();
     wrapper.update();
-    expect(toJSON(wrapper.find("header"))).toMatchSnapshot();
+    expect(wrapper.find("header")).toMatchSnapshot();
     expect(wrapper.find("CartItem")).toHaveLength(1);
   });
 });

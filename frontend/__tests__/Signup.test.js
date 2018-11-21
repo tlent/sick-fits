@@ -1,6 +1,5 @@
 import { mount } from "enzyme";
 import wait from "waait";
-import toJSON from "enzyme-to-json";
 import { MockedProvider } from "react-apollo/test-utils";
 import Signup, { SIGNUP_MUTATION } from "../components/Signup";
 import { CURRENT_USER_QUERY } from "../components/User";
@@ -50,7 +49,7 @@ describe("Signup component", () => {
         <Signup />
       </MockedProvider>
     );
-    expect(toJSON(wrapper.find("form"))).toMatchSnapshot();
+    expect(wrapper.find("form")).toMatchSnapshot();
   });
 
   it("calls the mutation properly", async () => {

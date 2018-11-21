@@ -1,6 +1,5 @@
 import { mount } from "enzyme";
 import wait from "waait";
-import toJSON from "enzyme-to-json";
 import { MockedProvider } from "react-apollo/test-utils";
 import CreateItem, { CREATE_ITEM_MUTATION } from "../components/CreateItem";
 import { fakeItem } from "../lib/testUtils";
@@ -18,9 +17,7 @@ describe("CreateItem component", () => {
         <CreateItem />
       </MockedProvider>
     );
-    expect(
-      toJSON(wrapper.find("form[data-test='CreateItemForm']"))
-    ).toMatchSnapshot();
+    expect(wrapper.find("form[data-test='CreateItemForm']")).toMatchSnapshot();
   });
 
   it("uploads a file when changed", async () => {
