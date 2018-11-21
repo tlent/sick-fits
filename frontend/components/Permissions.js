@@ -79,12 +79,11 @@ class UserPermissions extends Component {
   state = { permissions: this.props.user.permissions };
   handlePermissionChange = e => {
     const { value, checked } = e.target;
-    const { permissions } = this.state;
-    this.setState({
+    this.setState(({ permissions }) => ({
       permissions: checked
         ? [...permissions, value]
         : permissions.filter(permission => permission !== value)
-    });
+    }));
   };
   render() {
     const { user } = this.props;
